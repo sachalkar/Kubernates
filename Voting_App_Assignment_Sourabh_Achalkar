@@ -1,0 +1,124 @@
+1. Commands that you used during the assignment.
+ 
+root@ip-172-31-40-1:~# apt-get install git -y
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+git is already the newest version (1:2.25.1-1ubuntu3.11).
+git set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 8 not upgraded.
+ 
+## nxt get a clone from git for voting app
+root@ip-172-31-40-1:~# git clone  https://github.com/ashishrpandey/example-voting-app
+Cloning into 'example-voting-app'...
+remote: Enumerating objects: 494, done.
+remote: Total 494 (delta 0), reused 0 (delta 0), pack-reused 494
+Receiving objects: 100% (494/494), 236.18 KiB | 14.76 MiB/s, done.
+Resolving deltas: 100% (179/179), done.
+root@ip-172-31-40-1:~# /root/example-voting-app
+-bash: /root/example-voting-app: Is a directory
+root@ip-172-31-40-1:~# cd /root/example-voting-app
+root@ip-172-31-40-1:~/example-voting-app#
+root@ip-172-31-40-1:~/example-voting-app#
+root@ip-172-31-40-1:~/example-voting-app#
+root@ip-172-31-40-1:~/example-voting-app# ll
+total 132
+drwxr-xr-x 8 root root  4096 Apr 30 12:17 ./
+drwx------ 6 root root  4096 Apr 30 12:17 ../
+drwxr-xr-x 8 root root  4096 Apr 30 12:17 .git/
+drwxr-xr-x 2 root root  4096 Apr 30 12:17 .github/
+-rw-r--r-- 1 root root    33 Apr 30 12:17 .gitignore
+-rw-r--r-- 1 root root 10758 Apr 30 12:17 LICENSE
+-rw-r--r-- 1 root root   185 Apr 30 12:17 MAINTAINERS
+-rw-r--r-- 1 root root  2182 Apr 30 12:17 README.md
+-rw-r--r-- 1 root root 54824 Apr 30 12:17 architecture.png
+-rw-r--r-- 1 root root   808 Apr 30 12:17 docker-compose-javaworker.yml
+-rw-r--r-- 1 root root   400 Apr 30 12:17 docker-compose-simple.yml
+-rw-r--r-- 1 root root   808 Apr 30 12:17 docker-compose.yml
+-rw-r--r-- 1 root root  1692 Apr 30 12:17 docker-stack.yml
+-rw-r--r-- 1 root root   609 Apr 30 12:17 dockercloud.yml
+drwxr-xr-x 2 root root  4096 Apr 30 12:17 k8s-specifications/
+drwxr-xr-x 5 root root  4096 Apr 30 12:17 result/
+drwxr-xr-x 4 root root  4096 Apr 30 12:17 vote/
+drwxr-xr-x 3 root root  4096 Apr 30 12:17 worker/
+root@ip-172-31-40-1:~/example-voting-app# cd k8s-specifications/
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications# ll
+total 44
+drwxr-xr-x 2 root root 4096 Apr 29 12:17 ./
+drwxr-xr-x 8 root root 4096 Apr 29 12:17 ../
+-rw-r--r-- 1 root root  401 Apr 29 12:17 db-deployment.yaml
+-rw-r--r-- 1 root root  146 Apr 29 12:17 db-service.yaml
+-rw-r--r-- 1 root root  402 Apr 29 12:17 redis-deployment.yaml
+-rw-r--r-- 1 root root  152 Apr 29 12:17 redis-service.yaml
+-rw-r--r-- 1 root root  299 Apr 29 12:17 result-deployment.yaml
+-rw-r--r-- 1 root root  195 Apr 29 12:17 result-service.yaml
+-rw-r--r-- 1 root root  289 Apr 29 12:17 vote-deployment.yaml
+-rw-r--r-- 1 root root  192 Apr 29 12:17 vote-service.yaml
+-rw-r--r-- 1 root root  292 Apr 29 12:17 worker-deployment.yaml
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications# vi vote-service.yaml
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications# vi re
+redis-deployment.yaml   redis-service.yaml      result-deployment.yaml  result-service.yaml
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications# vi result-service.yaml
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications#
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications#
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications#
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications#
+ 
+#nxt change the nodeport for voting and result yaml according, wrt not to collide with other worker node
+ 
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications# kubectl apply -f .
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications#  kubectl get all
+NAME                          READY   STATUS              RESTARTS   AGE
+pod/db-58cc845644-wlccp       0/1     Pending             0          14s
+pod/redis-6878558678-gdb8x    0/1     Pending             0          14s
+pod/result-86bc6f7b5d-275xv   0/1     ContainerCreating   0          14s
+pod/vote-7d884dd585-ln8l9     0/1     ContainerCreating   0          14s
+pod/worker-6fc5d5b668-6z54m   0/1     Pending             0          14s
+ 
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db           ClusterIP   10.104.215.1     <none>        5432/TCP         16s
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          3m16s
+service/redis        ClusterIP   10.110.242.249   <none>        6379/TCP         16s
+service/result       NodePort    10.106.173.71    <none>        5001:31003/TCP   16s
+service/vote         NodePort    10.110.1.72      <none>        5000:31002/TCP   16s
+ 
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       0/1     1            0           16s
+deployment.apps/redis    0/1     1            0           16s
+deployment.apps/result   0/1     1            0           16s
+deployment.apps/vote     0/1     1            0           16s
+deployment.apps/worker   0/1     1            0           16s
+ 
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-58cc845644       1         1         0       16s
+replicaset.apps/redis-6878558678    1         1         0       16s
+replicaset.apps/result-86bc6f7b5d   1         1         0       16s
+replicaset.apps/vote-7d884dd585     1         1         0       16s
+replicaset.apps/worker-6fc5d5b668   1         1         0       16s
+root@ip-172-31-40-1:~/example-voting-app/k8s-specifications#
+ 
+2. snapshot of logs (wherever possible)
+Unable to add snapshot
+ 
+ 
+3. your comment on WHY result app STOPPED working after db pod stop
+DB pod stores the value from voting app and the pushes it to result app, hence when DB is deleted, result app will stop
+ 
+ 
+4. your answer to HOW YOU MADE THE RESULT POD work.
+By deploying the DB POD back again resuult POD will start working
+
+5.
+Being a deployment engineer, was aware of the basics, but this session gave a thorough breief of k8s which was very much useful
+
+Thanks and Regards,
+Sourabh Achalkar 
